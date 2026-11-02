@@ -1,3 +1,4 @@
+import { Analytics } from "@vercel/analytics/react";
 import { useEffect, useState } from "react";
 import Education from "./Education.jsx";
 import Experience from "./Experience.jsx";
@@ -58,6 +59,8 @@ export default function App() {
 
   return (
     <>
+      <Analytics />
+      <nav className="nav" aria-label="Main"></nav>
       <nav className="nav" aria-label="Main">
         {NAV.map((n) => (
           <a key={n} href={`#${n.toLowerCase()}`}>

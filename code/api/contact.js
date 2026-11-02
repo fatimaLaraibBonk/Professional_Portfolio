@@ -27,8 +27,10 @@ export default async function handler(req, res) {
     });
     const data = await r.json().catch(() => ({}));
     const ok = r.ok && data.success !== false;
+    if (!ok) console.error("web3forms replied:", r.status, JSON.stringify(data));
     return res.status(ok ? 200 : 502).json({ success: ok });
-  } catch {
-    return res.status(502).json({ success: false });
-  }
+  } catch (err) {
+  console.error("fetch failed:", err);
+  return res.status(502).json({ success: false });
+}
 }

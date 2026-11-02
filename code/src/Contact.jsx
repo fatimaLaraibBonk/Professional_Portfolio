@@ -1,11 +1,15 @@
 import { useState } from "react";
 import { CONTACT } from "./data.js";
 
+// Sends straight from the browser to Web3Forms. The key comes from an environment variable,
+// so it stays out of GitHub (it is still visible in the built site, which Web3Forms allows).
+const KEY = import.meta.env.VITE_WEB3FORMS_KEY;
+
 const LINKS = [
-  { label: "email me", glyph: "", color: "#f4b6ca", href: `mailto:${CONTACT.email}` },
-  { label: "download cv", glyph: "", color: "#c3dcf4", href: CONTACT.cv, download: "Fatima-Laraib-CV.pdf" },
-  { label: "github", glyph: "", color: "#c4ecdd", href: CONTACT.github, external: true },
-  { label: "linkedin", glyph: "", color: "#ffe88a", href: CONTACT.linkedin, external: true },
+  { label: "email me", glyph: "@", color: "#f4b6ca", href: `mailto:${CONTACT.email}` },
+  { label: "download cv", glyph: "↓", color: "#c3dcf4", href: CONTACT.cv, download: "Fatima-Laraib-CV.pdf" },
+  { label: "github", glyph: "{ }", color: "#c4ecdd", href: CONTACT.github, external: true },
+  { label: "linkedin", glyph: "in", color: "#ffe88a", href: CONTACT.linkedin, external: true },
 ];
 
 const Envelope = ({ color, glyph }) => (
@@ -19,27 +23,23 @@ const Envelope = ({ color, glyph }) => (
 export default function Contact() {
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
-  const [website, setWebsite] = useState(""); // hidden spam trap
+  const [trap, setTrap] = useState(""); // hidden spam trap
   const [status, setStatus] = useState("idle"); // idle | sending | sent | error | mailto
 
   const send = async (e) => {
     e.preventDefault();
-    if (!CONTACT.formEndpoint) {
+    if (trap) return setStatus("sent");
+    if (!KEY) {
       const body = `${message}\n\nfrom: ${email}`;
       window.location.href = `mailto:${CONTACT.email}?subject=${encodeURIComponent("message from your portfolio")}&body=${encodeURIComponent(body)}`;
-      setStatus("mailto");
-      return;
+      return setStatus("mailto");
     }
     setStatus("sending");
     try {
-      const res = await fetch(CONTACT.formEndpoint, {
+      const res = await fetch("https://api.web3forms.com/submit", {
         method: "POST",
         headers: { "Content-Type": "application/json", Accept: "application/json" },
-        body: JSON.stringify({
-          email,
-          message,
-          website, // honeypot
-        }),
+        body: JSON.stringify({ access_key: KEY, subject: "message from your portfolio", email, message }),
       });
       const data = await res.json().catch(() => ({}));
       if (res.ok && data.success !== false) {
@@ -76,7 +76,7 @@ export default function Contact() {
               message
               <textarea required rows="5" value={message} onChange={(e) => setMessage(e.target.value)} placeholder="hi fatima, …" />
             </label>
-            <input className="trap" tabIndex="-1" autoComplete="off" aria-hidden="true" value={website} onChange={(e) => setWebsite(e.target.value)} />
+            <input className="trap" tabIndex="-1" autoComplete="off" aria-hidden="true" value={trap} onChange={(e) => setTrap(e.target.value)} />
             <div className="form-foot">
               <button className="send-btn" type="submit" disabled={status === "sending"}>
                 {status === "sending" ? "sending…" : "send"}
@@ -88,13 +88,7 @@ export default function Contact() {
 
         <div className="mails">
           {LINKS.map((l) => (
-            <a
-              key={l.label}
-              className="mail"
-              href={l.href}
-              download={l.download}
-              {...(l.external ? { target: "_blank", rel: "noreferrer" } : {})}
-            >
+            <a key={l.label} className="mail" href={l.href} download={l.download} {...(l.external ? { target: "_blank", rel: "noreferrer" } : {})}>
               <Envelope color={l.color} glyph={l.glyph} />
               <span>{l.label}</span>
             </a>

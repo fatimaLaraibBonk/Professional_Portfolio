@@ -1,4 +1,3 @@
-import { Analytics } from "@vercel/analytics/react";
 import { useEffect, useState } from "react";
 import Education from "./Education.jsx";
 import Experience from "./Experience.jsx";
@@ -6,6 +5,8 @@ import Projects from "./Projects.jsx";
 import Skills from "./Skills.jsx";
 import Contact from "./Contact.jsx";
 import Folder from "./Folder.jsx";
+import Spacebar from "./Spacebar.jsx";
+
 
 const goTo = (id) => {
   const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -59,8 +60,6 @@ export default function App() {
 
   return (
     <>
-      <Analytics />
-      <nav className="nav" aria-label="Main"></nav>
       <nav className="nav" aria-label="Main">
         {NAV.map((n) => (
           <a key={n} href={`#${n.toLowerCase()}`}>
@@ -75,6 +74,7 @@ export default function App() {
           Hey, I'm<span className="caret" />
         </p>
 
+        <div className="keyboard">
         <div className="keys">
           <div className="letters">
             <div className="row">
@@ -104,6 +104,8 @@ export default function App() {
             }}
           />
         </div>
+        <Spacebar />
+        </div>
         <button className="sr" onClick={goIn}>Enter site</button>
       </header>
 
@@ -117,9 +119,9 @@ export default function App() {
                 <span className="x" aria-hidden="true">✕</span>
               </div>
               <p>
-                hi, im fatima. a data science student at fast nuces, islamabad. i have expereince 
-                in machine learning, deep learning, ai and backend development, and im always winning to learn more. 
-                please feel free to explore the portfolio and contact me if needed.
+                Hi, I'm Fatima Laraib. This is where your short bio goes: who you are, what you
+                study or build, and what you care about. Replace this paragraph with two or three
+                sentences in your own words.
               </p>
             </div>
             <div className="folders">

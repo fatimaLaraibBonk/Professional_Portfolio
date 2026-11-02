@@ -1,0 +1,9 @@
+/* spacebar under the keys */
+.keyboard { display: inline-flex; flex-direction: column; align-items: stretch; filter: drop-shadow(0 calc(var(--s) * 0.2) calc(var(--s) * 0.25) rgba(60, 100, 150, 0.28)); }
+.keyboard .keys { filter: none; }
+.key.sun { --top: #fff2b8; --side: #e8cf6a; }
+.key.space { --th: calc(var(--s) * 0.75); width: 100%; cursor: default; }
+.space .top b { font-size: calc(var(--s) * 0.3); white-space: nowrap; }
+.word { display: inline-block; animation: word-in 0.35s cubic-bezier(.3,1.5,.5,1) both; }
+@keyframes word-in { from { opacity: 0; transform: translateY(40%); } }
+@media (prefers-reduced-motion: reduce) { .word { animation: none; } }

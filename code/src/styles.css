@@ -281,3 +281,4 @@ button.x:focus-visible { outline: 3px solid #111; outline-offset: 2px; }
 }
 
 .form-body .trap { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
+.mails.wide { grid-template-columns: repeat(auto-fit, 120px); justify-content: start; gap: 28px 36px; }

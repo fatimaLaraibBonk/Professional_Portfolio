@@ -119,9 +119,8 @@ export default function App() {
                 <span className="x" aria-hidden="true">✕</span>
               </div>
               <p>
-                Hi, I'm Fatima Laraib. This is where your short bio goes: who you are, what you
-                study or build, and what you care about. Replace this paragraph with two or three
-                sentences in your own words.
+                Hi, I'm Fatima Laraib. im a data science student at fast who likes to solve problems using machine learning and deep learning.
+                im an ai and ml enthusiast and im always willing to learn more. 
               </p>
             </div>
             <div className="folders">

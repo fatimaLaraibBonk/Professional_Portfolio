@@ -1,25 +1,34 @@
 import { useEffect, useRef, useState } from "react";
 import { PROJECTS, CHAT, SMALL_TALK } from "./data.js";
 import { Modal } from "./Win.jsx";
+import Featured from "./Featured.jsx";
 
 const byRecent = (a, b) => (b.date || "").localeCompare(a.date || "");
 const esc = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 const plural = (n) => `${n} project${n === 1 ? "" : "s"}`;
 
-// matches the start of a word, so "ml" finds "ML" but not "html"
-function score(p, terms, withSummary) {
-  let s = 0;
-  for (const t of terms) {
-    const re = new RegExp(`(^|[^a-z0-9])${esc(t)}`, "i");
-    if (p.keywords.some((k) => re.test(k))) s += 3;
-    if (re.test(p.name)) s += 2;
-    if (withSummary && re.test(p.summary)) s += 1;
-  }
-  return s;
+// Everyday words that should never count as a search term
+const STOP = new Set(("a an the is are was were am be been to of in on at for and or with about me my you your u i it its " +
+  "this that these those do does did can could would should will what whats which who how why when where show tell give " +
+  "see find view any some please fatima her she he his him they them we us our there here have has had get got just " +
+  "really very also project projects work s t m re ve ll d").split(" "));
+
+// short terms (like "ml") must match a whole word; longer ones match the start of a word
+function termRegex(t) {
+  return new RegExp(t.length <= 2 ? `(^|[^a-z0-9])${esc(t)}([^a-z0-9]|$)` : `(^|[^a-z0-9])${esc(t)}`, "i");
 }
-function search(q, withSummary = true) {
-  const terms = q.toLowerCase().split(/[\s,]+/).filter(Boolean);
-  return PROJECTS.map((p) => [p, score(p, terms, withSummary)])
+function score(p, t) {
+  const re = termRegex(t);
+  return (p.keywords.some((k) => re.test(k)) ? 3 : 0) + (re.test(p.name) ? 2 : 0);
+}
+// Only keywords and project names are searched, and sentences must be mostly made of real keywords.
+function search(q) {
+  const terms = [...new Set(
+    q.toLowerCase().split(/[^a-z0-9+#.]+/).map((t) => t.replace(/^\.+|\.+$/g, "")).filter((t) => t && !STOP.has(t))
+  )];
+  const hits = terms.filter((t) => PROJECTS.some((p) => score(p, t) > 0));
+  if (!terms.length || hits.length * 2 < terms.length) return [];
+  return PROJECTS.map((p) => [p, hits.reduce((s, t) => s + score(p, t), 0)])
     .filter(([, s]) => s > 0)
     .sort((a, b) => b[1] - a[1] || byRecent(a[0], b[0]))
     .map(([p]) => p);
@@ -88,16 +97,15 @@ export default function Projects() {
   const all = () =>
     ask("all projects", { text: `here are all ${plural(PROJECTS.length)}:`, projects: [...PROJECTS].sort(byRecent) });
   const find = (q) => {
-    // 1) keyword/name match  2) small talk  3) looser match on summaries
-    let found = search(q, false);
+    const found = search(q);
     if (!found.length) {
       const talk = smallTalk(q);
       if (talk) return ask(q, { text: talk });
-      found = search(q, true);
     }
+    const tips = topKeywords().slice(0, 2).join(" or ");
     ask(q, found.length
       ? { text: `found ${plural(found.length)} for "${q}":`, projects: found }
-      : { text: `no projects match "${q}". try one of the keywords below, or go back.` });
+      : { text: `i couldn't find a project for "${q}". try a keyword${tips ? ` like ${tips}` : ""}, or tap one of the buttons below.` });
   };
   const submit = (e) => {
     e.preventDefault();
@@ -111,6 +119,8 @@ export default function Projects() {
   return (
     <section id="projects" className="section">
       <h2>projects</h2>
+      <Featured />
+      <p className="more">looking for something specific? ask the chat:</p>
       <div className="win chat">
         <div className="win-bar chat-head">
           <span className="who">

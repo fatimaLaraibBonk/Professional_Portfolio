@@ -1,0 +1,22 @@
+.feat { width: min(860px, 100%); margin: 0 0 40px; }
+.feat-viewport { overflow: hidden; }
+.feat-track { display: flex; transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
+.feat-slide { flex: 0 0 100%; min-width: 0; }
+.feat-img { display: block; width: 100%; aspect-ratio: 16 / 9; object-fit: cover; border-bottom: 3px solid #111; background: #fff; }
+.feat .feat-text { padding: 18px 22px 22px; }
+.feat .feat-text h3 { margin: 0 0 4px; font-size: 24px; font-weight: 700; }
+.feat .feat-text p { margin: 0; padding: 0; max-width: none; font-size: 16px; line-height: 1.55; color: #111; }
+.feat .feat-text p.feat-kw { font-size: 13px; opacity: 0.65; margin-bottom: 10px; }
+.feat-link {
+  display: inline-block; margin-top: 14px; padding: 7px 20px; color: #111; text-decoration: none; font-weight: 700;
+  background: #f4b6ca; border: 3px solid #111; border-radius: 999px; box-shadow: 3px 3px 0 #111;
+}
+.feat-link:hover { background: #fbd3e0; }
+.feat-link:focus-visible { outline: 3px solid #111; outline-offset: 3px; }
+.feat-nav { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-top: 3px solid #111; background: #fff; }
+.feat-dots { display: flex; gap: 8px; flex: 1; justify-content: center; flex-wrap: wrap; }
+.dot { width: 14px; height: 14px; padding: 0; border: 2.5px solid #111; border-radius: 50%; background: #fff; cursor: pointer; }
+.dot.on { background: #f4b6ca; }
+.dot:focus-visible { outline: 3px solid #111; outline-offset: 2px; }
+.section .more { margin: 0 0 14px; font-size: 16px; }
+@media (prefers-reduced-motion: reduce) { .feat-track { transition: none; } }

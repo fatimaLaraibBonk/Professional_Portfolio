@@ -6,10 +6,10 @@ import { CONTACT } from "./data.js";
 const KEY = import.meta.env.VITE_WEB3FORMS_KEY;
 
 const LINKS = [
-  { label: "email me", glyph: "@", color: "#f4b6ca", href: `mailto:${CONTACT.email}` },
-  { label: "download cv", glyph: "↓", color: "#c3dcf4", href: CONTACT.cv, download: "Fatima-Laraib-CV.pdf" },
-  { label: "github", glyph: "{ }", color: "#c4ecdd", href: CONTACT.github, external: true },
-  { label: "linkedin", glyph: "in", color: "#ffe88a", href: CONTACT.linkedin, external: true },
+  { label: "email me", glyph: "", color: "#f4b6ca", href: `mailto:${CONTACT.email}` },
+  { label: "download cv", glyph: "", color: "#c3dcf4", href: CONTACT.cv, download: "Fatima-Laraib-CV.pdf" },
+  { label: "github", glyph: "", color: "#c4ecdd", href: CONTACT.github, external: true },
+  { label: "linkedin", glyph: "", color: "#ffe88a", href: CONTACT.linkedin, external: true },
 ];
 
 const Envelope = ({ color, glyph }) => (
